@@ -1,0 +1,1 @@
+LibCMaker_GoogleTest is a CMake build scripts for build Google Test library with CMake.
