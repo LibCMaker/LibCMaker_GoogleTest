@@ -91,6 +91,7 @@ function(__gtest_find_library _name)
             ENV GTEST_ROOT
             ${GTEST_ROOT}
         PATH_SUFFIXES ${_gtest_libpath_suffixes}
+        NO_DEFAULT_PATH
     )
     mark_as_advanced(${_name})
 endfunction()
@@ -175,6 +176,7 @@ find_path(GTEST_INCLUDE_DIR gtest/gtest.h
     HINTS
         $ENV{GTEST_ROOT}/include
         ${GTEST_ROOT}/include
+    NO_DEFAULT_PATH
 )
 mark_as_advanced(GTEST_INCLUDE_DIR)
 
@@ -192,7 +194,8 @@ else()
     __gtest_find_library(GTEST_MAIN_LIBRARY_DEBUG gtest_maind)
 endif()
 
-include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+#include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+include(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(GTest DEFAULT_MSG GTEST_LIBRARY GTEST_INCLUDE_DIR GTEST_MAIN_LIBRARY)
 
 if(GTEST_FOUND)
