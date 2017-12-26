@@ -33,6 +33,7 @@ include(CMakeParseArguments) # cmake_parse_arguments
 
 include(cmr_lib_cmaker)
 include(cmr_print_debug_message)
+include(cmr_print_message)
 include(cmr_print_var_value)
 
 
@@ -126,5 +127,22 @@ function(lib_cmaker_googletest)
     CMAKE_ARGS        ${lcm_CMAKE_ARGS}
     INSTALL
   )
+
+  # Release lib must be builded for debug type.
+  if(CMAKE_CFG_INTDIR STREQUAL "." AND CMAKE_BUILD_TYPE STREQUAL "Debug"
+      OR CMAKE_CFG_INTDIR STREQUAL "Debug")
+
+    cmr_print_message("Build the Release library type.")
+    set(CMAKE_BUILD_TYPE "Release")
+    cmr_lib_cmaker(
+      VERSION           ${arg_VERSION}
+      PROJECT_DIR       ${lcm_LibCMaker_GOOGLETEST_SRC_DIR}
+      DOWNLOAD_DIR      ${arg_DOWNLOAD_DIR}
+      UNPACKED_SRC_DIR  ${arg_UNPACKED_SRC_DIR}
+      BUILD_DIR         ${arg_BUILD_DIR}
+      CMAKE_ARGS        ${lcm_CMAKE_ARGS}
+      INSTALL
+    )
+  endif()
 
 endfunction()
