@@ -36,6 +36,12 @@ function(cmr_googletest_get_download_params
     set(lib_commit
       "5490beb0602eab560fa3969a4410e11d94bf12af")
   endif()
+  if(version VERSION_EQUAL "1.8.20180314")
+    set(lib_sha
+      "2280d3889d21a2ce3b6d38e4cc1f7d462068652675864075ed78a2709bc32bef")
+    set(lib_commit
+      "a325ad2db5deb623eab740527e559b81c0f39d65")
+  endif()
 
   if(NOT DEFINED lib_sha)
     cmr_print_fatal_error("Library version ${version} is not supported.")
