@@ -46,6 +46,8 @@ list(APPEND CMAKE_MODULE_PATH "${lcm_LibCMaker_GOOGLETEST_SRC_DIR}/cmake/modules
 function(lib_cmaker_googletest)
   cmake_minimum_required(VERSION 3.2)
 
+  cmr_print_message("======== Build library: GoogleTest ========")
+
   set(options
     # optional args
   )
