@@ -131,9 +131,9 @@ function(lib_cmaker_googletest)
   )
 
   # Release lib must be builded for debug type.
-  if(CMAKE_CFG_INTDIR STREQUAL "." AND CMAKE_BUILD_TYPE STREQUAL "Debug"
-      OR CMAKE_CFG_INTDIR STREQUAL "Debug")
-
+  # TODO: for multi-configuration generators, see:
+  # https://stackoverflow.com/a/24470998
+  if(CMAKE_CFG_INTDIR STREQUAL "." AND CMAKE_BUILD_TYPE STREQUAL "Debug")
     cmr_print_message("Build the Release library type.")
     set(CMAKE_BUILD_TYPE "Release")
     cmr_lib_cmaker(
