@@ -24,7 +24,7 @@
 # Can be used as separate project for library building with standard CMake way.
 
 cmake_minimum_required(VERSION 3.2)
-project(LibCMaker_Dirent)
+project(LibCMaker_GoogleTest)
 
 if(NOT LIBCMAKER_SRC_DIR)
   message(FATAL_ERROR

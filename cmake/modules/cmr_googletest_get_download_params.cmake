@@ -32,13 +32,13 @@ function(cmr_googletest_get_download_params
 
   if(version VERSION_EQUAL "1.8.20171222")
     set(lib_sha
-      "fb94ea2c653f239fb57e423afef372ebb5e019418af58f8bb2ce946679a6187b")
+      "95942bceb023566ff2eb8c4d6ad9980394c5952c907bf3e3b93a0403bf89fed1")
     set(lib_commit
       "5490beb0602eab560fa3969a4410e11d94bf12af")
   endif()
   if(version VERSION_EQUAL "1.8.20180314")
     set(lib_sha
-      "2280d3889d21a2ce3b6d38e4cc1f7d462068652675864075ed78a2709bc32bef")
+      "39c1ce3e3a004d1982708d5cb6993b31ae0aed3386ca2fb11c37fe9fef3a6508")
     set(lib_commit
       "a325ad2db5deb623eab740527e559b81c0f39d65")
   endif()
@@ -48,8 +48,8 @@ function(cmr_googletest_get_download_params
   endif()
 
   set(lib_src_name "googletest-${lib_commit}")
-  set(lib_tar_file_name "${lib_src_name}.zip")
-  set(lib_url "${lib_base_url}/${lib_commit}.zip")
+  set(lib_tar_file_name "${lib_src_name}.tar.gz")
+  set(lib_url "${lib_base_url}/${lib_commit}.tar.gz")
 
   set(${out_url} "${lib_url}" PARENT_SCOPE)
   set(${out_sha} "${lib_sha}" PARENT_SCOPE)
