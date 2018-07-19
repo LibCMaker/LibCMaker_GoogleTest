@@ -21,24 +21,29 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 # ****************************************************************************
 
-cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.2)
 
 project(LibCMaker_GoogleTest_Compile_Test CXX)
 
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+set(CMAKE_VERBOSE_MAKEFILE ON)
+set(cmr_PRINT_DEBUG ON)
 
 
 #-----------------------------------------------------------------------
-# Configure for find_package.
+# Configure to find_package()
 #-----------------------------------------------------------------------
 
-# Set CMake's search path for find_package(), find_program(), find_library(),
-# find_file(), and find_path() commands.
+# Set CMake's search path for find_*() commands.
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_INSTALL_PREFIX}")
 
 if(ANDROID)
   list(APPEND CMAKE_FIND_ROOT_PATH "${CMAKE_INSTALL_PREFIX}")
 endif()
+
+# To use our FindGTest.cmake.
+list(APPEND CMAKE_MODULE_PATH
+  "${PROJECT_SOURCE_DIR}/cmake/LibCMaker_GoogleTest/cmake"
+)
 
 
 #-----------------------------------------------------------------------
@@ -51,37 +56,30 @@ set(LIBCMAKER_SRC_DIR "${PROJECT_SOURCE_DIR}/cmake/LibCMaker")
 
 
 #-----------------------------------------------------------------------
-# Set vars for LibCMaker_GoogleTest.
+# Set vars for LibCMaker_GoogleTest
 #-----------------------------------------------------------------------
 
 # Standard CMake vars.
 #set(BUILD_SHARED_LIBS ON)
 
-#set(SKIP_INSTALL_HEADERS ON)
-#set(SKIP_INSTALL_LIBRARIES ON)
-#set(SKIP_INSTALL_ALL ON)
-
 option(BUILD_TESTING "Build the testing tree." ON)
 
-# Set useful vars for lib_cmaker_googletest().
-set(cmr_PRINT_DEBUG ON)
-
-set(GOOGLETEST_lib_VERSION "1.8.20180314")
-
+# Vars to lib_cmaker_googletest().
+set(GOOGLETEST_lib_VERSION  "1.8.20180314")
 set(GOOGLETEST_DOWNLOAD_DIR "${PROJECT_BINARY_DIR}")
-set(GOOGLETEST_UNPACKED_SRC_DIR "${PROJECT_BINARY_DIR}")
-set(GOOGLETEST_BUILD_DIR "${PROJECT_BINARY_DIR}/build_googletest")
+set(GOOGLETEST_UNPACKED_DIR "${PROJECT_BINARY_DIR}")
+set(GOOGLETEST_BUILD_DIR    "${PROJECT_BINARY_DIR}/build_googletest")
 
-# Library specific vars and options.
 set(GTEST_ROOT "${CMAKE_INSTALL_PREFIX}")
 set(ENV{GTEST_ROOT} "${GTEST_ROOT}")
 
+# Library specific vars and options.
 
 #-----------------------------------------------------------------------
 # Common Google Test and Google Mock options
 #
 option(BUILD_GTEST "Builds the googletest subproject" ON)
-#Note that googlemock target already builds googletest
+# Note that googlemock target already builds googletest.
 option(BUILD_GMOCK "Builds the googlemock subproject" OFF)
 
 # BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to
@@ -115,7 +113,7 @@ option(gmock_build_tests "Build all of Google Mock's own tests." OFF)
 
 
 #-----------------------------------------------------------------------
-# Build and install the GoogleTest.
+# Build and install the GoogleTest
 #-----------------------------------------------------------------------
 
 # From "FindGTest.cmake":
@@ -128,57 +126,49 @@ endif()
 include(
   ${PROJECT_SOURCE_DIR}/cmake/LibCMaker_GoogleTest/lib_cmaker_googletest.cmake)
 
-# Make compile, build and install the library at a config CMake phase,
-# generate the CMake config files.
-
-# Install specified library version.
+# Make compile, build and install the library at a config CMake phase.
 lib_cmaker_googletest(
   VERSION           ${GOOGLETEST_lib_VERSION}
   DOWNLOAD_DIR      ${GOOGLETEST_DOWNLOAD_DIR}
-  UNPACKED_SRC_DIR  ${GOOGLETEST_UNPACKED_SRC_DIR}
+  UNPACKED_DIR  ${GOOGLETEST_UNPACKED_DIR}
   BUILD_DIR         ${GOOGLETEST_BUILD_DIR}
 )
 
 
 #-----------------------------------------------------------------------
-# find_package
+# find_package()
 #-----------------------------------------------------------------------
-
-set(LIBCMAKER_GOOGLETEST_SRC_DIR
-  "${PROJECT_SOURCE_DIR}/cmake/LibCMaker_GoogleTest")
-# To use our FindGTest.cmake
-list(APPEND CMAKE_MODULE_PATH "${LIBCMAKER_GOOGLETEST_SRC_DIR}/cmake")
 
 # Use newly got library.
 find_package(GTest REQUIRED)
 
 
 #-----------------------------------------------------------------------
-# Link to the library.
+# Link to the library
 #-----------------------------------------------------------------------
 
-# Get an example sources from the Google Test sources.
-include(
-  ${PROJECT_SOURCE_DIR}/cmake/LibCMaker_GoogleTest/cmake/modules/cmr_googletest_get_download_params.cmake)
-cmr_googletest_get_download_params(${GOOGLETEST_lib_VERSION}
-  lib_URL lib_SHA lib_SRC_DIR_NAME lib_ARCH_FILE_NAME)
-set(lib_SRC_DIR "${GOOGLETEST_UNPACKED_SRC_DIR}/${lib_SRC_DIR_NAME}")
+# Build test library.
 
-# Build lib for testing.
+# Get an example sources from the lib sources.
+set(src_commit "a325ad2db5deb623eab740527e559b81c0f39d65")
+set(lib_EXAMPLES_SRC_DIR
+  "${GOOGLETEST_UNPACKED_DIR}/googletest-${GOOGLETEST_lib_VERSION}/googletest-${src_commit}/googletest/samples"
+)
+
 add_library(${PROJECT_NAME}_lib
-  ${lib_SRC_DIR}/googletest/samples/sample1.h
-  ${lib_SRC_DIR}/googletest/samples/sample1.cc
+  ${lib_EXAMPLES_SRC_DIR}/sample1.h
+  ${lib_EXAMPLES_SRC_DIR}/sample1.cc
 )
 
 # Testing with Google Test.
 if(BUILD_TESTING)
   enable_testing()
   add_executable(${PROJECT_NAME}_unittest
-    ${lib_SRC_DIR}/googletest/samples/sample1_unittest.cc
+    ${lib_EXAMPLES_SRC_DIR}/sample1_unittest.cc
   )
   target_link_libraries(${PROJECT_NAME}_unittest
-    ${PROJECT_NAME}_lib      # Our lib for testing.
-    GTest::GTest GTest::Main # GTest libs.
+    ${PROJECT_NAME}_lib       # Our lib for testing.
+    GTest::GTest GTest::Main  # GTest libs.
   )
   add_test(NAME AllTestsIn_${PROJECT_NAME} COMMAND ${PROJECT_NAME}_unittest)
   

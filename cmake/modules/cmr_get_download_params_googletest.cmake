@@ -21,38 +21,32 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 # ****************************************************************************
 
-include(cmr_get_version_parts)
-include(cmr_print_fatal_error)
-
-function(cmr_googletest_get_download_params
-    version
-    out_url out_sha out_src_dir_name out_tar_file_name)
-
-  set(lib_base_url "https://github.com/google/googletest/archive")
+# Part of "LibCMaker/cmake/modules/cmr_get_download_params.cmake".
 
   if(version VERSION_EQUAL "1.8.20171222")
-    set(lib_sha
+    set(arch_file_sha
       "95942bceb023566ff2eb8c4d6ad9980394c5952c907bf3e3b93a0403bf89fed1")
-    set(lib_commit
+    set(src_commit
       "5490beb0602eab560fa3969a4410e11d94bf12af")
   endif()
   if(version VERSION_EQUAL "1.8.20180314")
-    set(lib_sha
+    set(arch_file_sha
       "39c1ce3e3a004d1982708d5cb6993b31ae0aed3386ca2fb11c37fe9fef3a6508")
-    set(lib_commit
+    set(src_commit
       "a325ad2db5deb623eab740527e559b81c0f39d65")
   endif()
 
-  if(NOT DEFINED lib_sha)
-    cmr_print_fatal_error("Library version ${version} is not supported.")
-  endif()
+  set(base_url "https://github.com/google/googletest/archive")
+  set(src_dir_name    "googletest-${version}")
+  set(arch_file_name  "${src_dir_name}.tar.gz")
+  set(unpack_to_dir   "${unpacked_dir}/${src_dir_name}")
 
-  set(lib_src_name "googletest-${lib_commit}")
-  set(lib_tar_file_name "${lib_src_name}.tar.gz")
-  set(lib_url "${lib_base_url}/${lib_commit}.tar.gz")
-
-  set(${out_url} "${lib_url}" PARENT_SCOPE)
-  set(${out_sha} "${lib_sha}" PARENT_SCOPE)
-  set(${out_src_dir_name} "${lib_src_name}" PARENT_SCOPE)
-  set(${out_tar_file_name} "${lib_tar_file_name}" PARENT_SCOPE)
-endfunction()
+  set(${out_ARCH_SRC_URL}   "${base_url}/${src_commit}.tar.gz" PARENT_SCOPE)
+  set(${out_ARCH_DST_FILE}  "${download_dir}/${arch_file_name}" PARENT_SCOPE)
+  set(${out_ARCH_FILE_SHA}  "${arch_file_sha}" PARENT_SCOPE)
+  set(${out_SHA_ALG}        "SHA256" PARENT_SCOPE)
+  set(${out_UNPACK_TO_DIR}  "${unpack_to_dir}" PARENT_SCOPE)
+  set(${out_UNPACKED_SOURCES_DIR}
+    "${unpack_to_dir}/googletest-${src_commit}" PARENT_SCOPE
+  )
+  set(${out_VERSION_BUILD_DIR} "${build_dir}/${src_dir_name}" PARENT_SCOPE)
