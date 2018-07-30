@@ -87,11 +87,13 @@ endfunction()
 function(__gtest_find_library _name)
     find_library(${_name}
         NAMES ${ARGN}
-        HINTS
-            ENV GTEST_ROOT
-            ${GTEST_ROOT}
+#        HINTS
+#            ENV GTEST_ROOT
+#            ${GTEST_ROOT}
         PATH_SUFFIXES ${_gtest_libpath_suffixes}
-        NO_DEFAULT_PATH
+        NO_CMAKE_ENVIRONMENT_PATH
+        NO_SYSTEM_ENVIRONMENT_PATH
+        NO_CMAKE_SYSTEM_PATH
     )
     mark_as_advanced(${_name})
 endfunction()
@@ -173,10 +175,12 @@ endif()
 
 
 find_path(GTEST_INCLUDE_DIR gtest/gtest.h
-    HINTS
-        $ENV{GTEST_ROOT}/include
-        ${GTEST_ROOT}/include
-    NO_DEFAULT_PATH
+#    HINTS
+#        $ENV{GTEST_ROOT}/include
+#        ${GTEST_ROOT}/include
+    NO_CMAKE_ENVIRONMENT_PATH
+    NO_SYSTEM_ENVIRONMENT_PATH
+    NO_CMAKE_SYSTEM_PATH
 )
 mark_as_advanced(GTEST_INCLUDE_DIR)
 

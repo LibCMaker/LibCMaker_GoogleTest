@@ -21,7 +21,7 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 # ****************************************************************************
 
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.3)
 
 project(LibCMaker_GoogleTest_Compile_Test CXX)
 
@@ -69,9 +69,6 @@ set(GOOGLETEST_lib_VERSION  "1.8.20180314")
 set(GOOGLETEST_DOWNLOAD_DIR "${PROJECT_BINARY_DIR}")
 set(GOOGLETEST_UNPACKED_DIR "${PROJECT_BINARY_DIR}")
 set(GOOGLETEST_BUILD_DIR    "${PROJECT_BINARY_DIR}/build_googletest")
-
-set(GTEST_ROOT "${CMAKE_INSTALL_PREFIX}")
-set(ENV{GTEST_ROOT} "${GTEST_ROOT}")
 
 # Library specific vars and options.
 
@@ -128,10 +125,10 @@ include(
 
 # Make compile, build and install the library at a config CMake phase.
 lib_cmaker_googletest(
-  VERSION           ${GOOGLETEST_lib_VERSION}
-  DOWNLOAD_DIR      ${GOOGLETEST_DOWNLOAD_DIR}
+  VERSION       ${GOOGLETEST_lib_VERSION}
+  DOWNLOAD_DIR  ${GOOGLETEST_DOWNLOAD_DIR}
   UNPACKED_DIR  ${GOOGLETEST_UNPACKED_DIR}
-  BUILD_DIR         ${GOOGLETEST_BUILD_DIR}
+  BUILD_DIR     ${GOOGLETEST_BUILD_DIR}
 )
 
 

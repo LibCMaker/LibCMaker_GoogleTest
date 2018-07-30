@@ -22,10 +22,10 @@
 # ****************************************************************************
 
 ## +++ Common part of the lib_cmaker_<lib_name> function +++
-set(lib_NAME "GoogleTest")
+set(cmr_lib_NAME "GoogleTest")
 
 # To find library's LibCMaker source dir.
-set(lcm_${lib_NAME}_SRC_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(lcm_${cmr_lib_NAME}_SRC_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 if(NOT LIBCMAKER_SRC_DIR)
   message(FATAL_ERROR
@@ -90,9 +90,9 @@ function(lib_cmaker_googletest)
 
 ## +++ Common part of the lib_cmaker_<lib_name> function +++
   cmr_lib_cmaker_main(
-    NAME          ${lib_NAME}
+    NAME          ${cmr_lib_NAME}
     VERSION       ${arg_VERSION}
-    BASE_DIR      ${lcm_${lib_NAME}_SRC_DIR}
+    BASE_DIR      ${lcm_${cmr_lib_NAME}_SRC_DIR}
     DOWNLOAD_DIR  ${arg_DOWNLOAD_DIR}
     UNPACKED_DIR  ${arg_UNPACKED_DIR}
     BUILD_DIR     ${arg_BUILD_DIR}
@@ -109,9 +109,9 @@ function(lib_cmaker_googletest)
     set(CMAKE_BUILD_TYPE "Release")
 ## +++ Common part of the lib_cmaker_<lib_name> function +++
     cmr_lib_cmaker_main(
-      NAME          ${lib_NAME}
+      NAME          ${cmr_lib_NAME}
       VERSION       ${arg_VERSION}
-      BASE_DIR      ${lcm_${lib_NAME}_SRC_DIR}
+      BASE_DIR      ${lcm_${cmr_lib_NAME}_SRC_DIR}
       DOWNLOAD_DIR  ${arg_DOWNLOAD_DIR}
       UNPACKED_DIR  ${arg_UNPACKED_DIR}
       BUILD_DIR     ${arg_BUILD_DIR}
