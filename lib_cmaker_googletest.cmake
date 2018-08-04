@@ -105,7 +105,7 @@ function(lib_cmaker_googletest)
   # TODO: for multi-configuration generators, see:
   # https://stackoverflow.com/a/24470998
   if(CMAKE_CFG_INTDIR STREQUAL "." AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-    cmr_print_message("Build the Release library type.")
+    cmr_print_status("Build the Release library type.")
     set(CMAKE_BUILD_TYPE "Release")
 ## +++ Common part of the lib_cmaker_<lib_name> function +++
     cmr_lib_cmaker_main(
