@@ -40,37 +40,36 @@ if(ANDROID)
   list(APPEND CMAKE_FIND_ROOT_PATH "${CMAKE_INSTALL_PREFIX}")
 endif()
 
-# To use our FindGTest.cmake.
-list(APPEND CMAKE_MODULE_PATH
-  "${PROJECT_SOURCE_DIR}/cmake/LibCMaker_GoogleTest/cmake"
-)
-
 
 #-----------------------------------------------------------------------
 # Set path to LibCMaker root
 #-----------------------------------------------------------------------
 
-set(LIBCMAKER_SRC_DIR "${PROJECT_SOURCE_DIR}/cmake/LibCMaker")
+set(LibCMaker_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake/LibCMaker")
 # Uncomment it if need functions from LibCMaker
-#list(APPEND CMAKE_MODULE_PATH "${LIBCMAKER_SRC_DIR}/cmake/modules")
+#list(APPEND CMAKE_MODULE_PATH "${LibCMaker_DIR}/cmake")
 
 
 #-----------------------------------------------------------------------
 # Set vars for LibCMaker_GoogleTest
 #-----------------------------------------------------------------------
 
-# Standard CMake vars.
-#set(BUILD_SHARED_LIBS ON)
+set(GOOGLETEST_lib_NAME     "GoogleTest")
+set(GOOGLETEST_lib_VERSION  "1.8.20180314")
+set(GOOGLETEST_lib_DIR  "${CMAKE_CURRENT_LIST_DIR}/cmake/LibCMaker_GoogleTest")
+
+# To use below for sample sources.
+set(cmr_UNPACKED_DIR ${CMAKE_CURRENT_BINARY_DIR}/download/unpacked)
+
+# To use our FindGTest.cmake.
+list(APPEND CMAKE_MODULE_PATH "${GOOGLETEST_lib_DIR}/cmake/modules")
 
 option(BUILD_TESTING "Build the testing tree." ON)
 
-# Vars to lib_cmaker_googletest().
-set(GOOGLETEST_lib_VERSION  "1.8.20180314")
-set(GOOGLETEST_DOWNLOAD_DIR "${PROJECT_BINARY_DIR}")
-set(GOOGLETEST_UNPACKED_DIR "${PROJECT_BINARY_DIR}")
-set(GOOGLETEST_BUILD_DIR    "${PROJECT_BINARY_DIR}/build_googletest")
 
-# Library specific vars and options.
+#-----------------------------------------------------------------------
+# Library specific vars and options
+#-----------------------------------------------------------------------
 
 #-----------------------------------------------------------------------
 # Common Google Test and Google Mock options
@@ -110,7 +109,7 @@ option(gmock_build_tests "Build all of Google Mock's own tests." OFF)
 
 
 #-----------------------------------------------------------------------
-# Build and install the GoogleTest
+# Build, install and find the GoogleTest
 #-----------------------------------------------------------------------
 
 # From "FindGTest.cmake":
@@ -120,24 +119,16 @@ if(MSVC)
   set(GTEST_MSVC_SEARCH "MT")
 endif()
 
-include(
-  ${PROJECT_SOURCE_DIR}/cmake/LibCMaker_GoogleTest/lib_cmaker_googletest.cmake)
-
-# Make compile, build and install the library at a config CMake phase.
-lib_cmaker_googletest(
-  VERSION       ${GOOGLETEST_lib_VERSION}
-  DOWNLOAD_DIR  ${GOOGLETEST_DOWNLOAD_DIR}
-  UNPACKED_DIR  ${GOOGLETEST_UNPACKED_DIR}
-  BUILD_DIR     ${GOOGLETEST_BUILD_DIR}
+# Make build and install the library at a config CMake phase.
+include(${LibCMaker_DIR}/cmake/cmr_find_package.cmake)
+cmr_find_package(
+  LibCMaker_DIR   ${LibCMaker_DIR}
+  NAME            ${GOOGLETEST_lib_NAME}
+  VERSION         ${GOOGLETEST_lib_VERSION}
+  LIB_DIR         ${GOOGLETEST_lib_DIR}
+  REQUIRED
+  FIND_MODULE_NAME GTest
 )
-
-
-#-----------------------------------------------------------------------
-# find_package()
-#-----------------------------------------------------------------------
-
-# Use newly got library.
-find_package(GTest REQUIRED)
 
 
 #-----------------------------------------------------------------------
@@ -149,7 +140,7 @@ find_package(GTest REQUIRED)
 # Get an example sources from the lib sources.
 set(src_commit "a325ad2db5deb623eab740527e559b81c0f39d65")
 set(lib_EXAMPLES_SRC_DIR
-  "${GOOGLETEST_UNPACKED_DIR}/googletest-${GOOGLETEST_lib_VERSION}/googletest-${src_commit}/googletest/samples"
+  "${cmr_UNPACKED_DIR}/googletest-${GOOGLETEST_lib_VERSION}/googletest-${src_commit}/googletest/samples"
 )
 
 add_library(${PROJECT_NAME}_lib
@@ -168,7 +159,7 @@ if(BUILD_TESTING)
     GTest::GTest GTest::Main  # GTest libs.
   )
   add_test(NAME AllTestsIn_${PROJECT_NAME} COMMAND ${PROJECT_NAME}_unittest)
-  
+
   # For running test, 1st build all:
   #   cmake --build .
   # Then run test with this command:
@@ -179,10 +170,10 @@ if(BUILD_TESTING)
   # see
   # https://stackoverflow.com/a/37123943
   # https://stackoverflow.com/a/38386596
-  
+
   # For Visual Studio:
   # https://stackoverflow.com/a/31124523
   # https://stackoverflow.com/a/37123943
   # cmake -E env CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --target RUN_TESTS
-  
+
 endif()
