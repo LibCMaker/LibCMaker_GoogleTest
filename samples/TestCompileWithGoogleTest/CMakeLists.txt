@@ -109,15 +109,19 @@ option(gmock_build_tests "Build all of Google Mock's own tests." OFF)
 
 
 #-----------------------------------------------------------------------
-# Build, install and find the GoogleTest
-#-----------------------------------------------------------------------
-
+# FindGTest.cmake options
+#
 # From "FindGTest.cmake":
 #   If compiling with MSVC, this variable can be set to ``MT`` or
 #   ``MD`` (the default) to enable searching a GTest build tree
 if(MSVC)
   set(GTEST_MSVC_SEARCH "MT")
 endif()
+
+
+#-----------------------------------------------------------------------
+# Build, install and find the GoogleTest
+#-----------------------------------------------------------------------
 
 # Make build and install the library at a config CMake phase.
 include(${LibCMaker_DIR}/cmake/cmr_find_package.cmake)
