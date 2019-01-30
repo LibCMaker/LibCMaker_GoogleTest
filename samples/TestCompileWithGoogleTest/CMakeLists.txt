@@ -3,7 +3,7 @@
 #  Purpose:  A CMake build script for Google Test library
 #  Author:   NikitaFeodonit, nfeodonit@yandex.com
 # ****************************************************************************
-#    Copyright (c) 2017-2018 NikitaFeodonit
+#    Copyright (c) 2017-2019 NikitaFeodonit
 #
 #    This file is part of the LibCMaker_GoogleTest project.
 #
@@ -25,8 +25,8 @@ cmake_minimum_required(VERSION 3.4)
 
 project(LibCMaker_GoogleTest_Compile_Test CXX)
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
-set(cmr_PRINT_DEBUG ON)
+option(CMAKE_VERBOSE_MAKEFILE "CMAKE_VERBOSE_MAKEFILE" OFF)
+option(cmr_PRINT_DEBUG "cmr_PRINT_DEBUG" OFF)
 
 
 #-----------------------------------------------------------------------
@@ -42,142 +42,54 @@ endif()
 
 
 #-----------------------------------------------------------------------
-# Set path to LibCMaker root
+# Set path vars
 #-----------------------------------------------------------------------
 
-set(LibCMaker_DIR "${CMAKE_CURRENT_LIST_DIR}/cmake/LibCMaker")
-# Uncomment it if need functions from LibCMaker
-#list(APPEND CMAKE_MODULE_PATH "${LibCMaker_DIR}/cmake")
-
-
-#-----------------------------------------------------------------------
-# Set vars for LibCMaker_GoogleTest
-#-----------------------------------------------------------------------
-
-set(GOOGLETEST_lib_NAME     "GoogleTest")
-set(GOOGLETEST_lib_VERSION  "1.8.20180314")
-set(GOOGLETEST_lib_DIR  "${CMAKE_CURRENT_LIST_DIR}/cmake/LibCMaker_GoogleTest")
-
+set(libs_DIR "${CMAKE_CURRENT_LIST_DIR}/libs")
 # To use below for sample sources.
 set(cmr_UNPACKED_DIR ${CMAKE_CURRENT_BINARY_DIR}/download/unpacked)
 
-# To use our FindGTest.cmake.
-list(APPEND CMAKE_MODULE_PATH "${GOOGLETEST_lib_DIR}/cmake/modules")
 
-option(BUILD_TESTING "Build the testing tree." ON)
+#-----------------------------------------------------------------------
+# LibCMaker settings
+#-----------------------------------------------------------------------
+
+set(LibCMaker_DIR "${libs_DIR}/LibCMaker")
+list(APPEND CMAKE_MODULE_PATH "${LibCMaker_DIR}/cmake")
+include(cmr_find_package)
 
 
 #-----------------------------------------------------------------------
-# Library specific vars and options
+# Download, configure, build, install and find the required libraries
 #-----------------------------------------------------------------------
 
-#-----------------------------------------------------------------------
-# Common Google Test and Google Mock options
-#
-option(BUILD_GTEST "Builds the googletest subproject" ON)
-# Note that googlemock target already builds googletest.
-option(BUILD_GMOCK "Builds the googlemock subproject" OFF)
-
-# BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to
-# make it prominent in the GUI.
-option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
-
-#-----------------------------------------------------------------------
-# Google Test options
-#
-
-# When other libraries are using a shared version of runtime libraries,
-# Google Test also has to use one.
-option(
-  gtest_force_shared_crt
-  "Use shared (DLL) run-time lib even when Google Test is built as static lib."
-  ON
-)
-option(gtest_build_tests "Build all of gtest's own tests." OFF)
-option(gtest_build_samples "Build gtest's sample programs." OFF)
-option(gtest_disable_pthreads "Disable uses of pthreads in gtest." OFF)
-option(
-  gtest_hide_internal_symbols
-  "Build gtest with internal symbols hidden in shared libraries."
-  OFF
-)
-
-#-----------------------------------------------------------------------
-# Google Mock options
-#
-option(gmock_build_tests "Build all of Google Mock's own tests." OFF)
-
-
-#-----------------------------------------------------------------------
-# FindGTest.cmake options
-#
-# From "FindGTest.cmake":
-#   If compiling with MSVC, this variable can be set to ``MT`` or
-#   ``MD`` (the default) to enable searching a GTest build tree
-if(MSVC)
-  set(GTEST_MSVC_SEARCH "MT")
+option(BUILD_TESTING "Build the testing tree." OFF)
+if(BUILD_TESTING)
+  enable_testing()
+  include(${libs_DIR}/LibCMaker_GoogleTest/cmr_build_googletest.cmake)
 endif()
 
 
 #-----------------------------------------------------------------------
-# Build, install and find the GoogleTest
+# Build the test library
 #-----------------------------------------------------------------------
-
-# Make build and install the library at a config CMake phase.
-include(${LibCMaker_DIR}/cmake/cmr_find_package.cmake)
-cmr_find_package(
-  LibCMaker_DIR   ${LibCMaker_DIR}
-  NAME            ${GOOGLETEST_lib_NAME}
-  VERSION         ${GOOGLETEST_lib_VERSION}
-  LIB_DIR         ${GOOGLETEST_lib_DIR}
-  REQUIRED
-  FIND_MODULE_NAME GTest
-)
-
-
-#-----------------------------------------------------------------------
-# Link to the library
-#-----------------------------------------------------------------------
-
-# Build test library.
 
 # Get an example sources from the lib sources.
 set(src_commit "a325ad2db5deb623eab740527e559b81c0f39d65")
 set(lib_EXAMPLES_SRC_DIR
-  "${cmr_UNPACKED_DIR}/googletest-${GOOGLETEST_lib_VERSION}/googletest-${src_commit}/googletest/samples"
+  "${cmr_UNPACKED_DIR}/googletest-${GTEST_lib_VERSION}/googletest-${src_commit}/googletest/samples"
 )
 
-add_library(${PROJECT_NAME}_lib
+add_library(${PROJECT_NAME}
   ${lib_EXAMPLES_SRC_DIR}/sample1.h
   ${lib_EXAMPLES_SRC_DIR}/sample1.cc
 )
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
 
-# Testing with Google Test.
-if(BUILD_TESTING)
-  enable_testing()
-  add_executable(${PROJECT_NAME}_unittest
-    ${lib_EXAMPLES_SRC_DIR}/sample1_unittest.cc
-  )
-  target_link_libraries(${PROJECT_NAME}_unittest
-    ${PROJECT_NAME}_lib       # Our lib for testing.
-    GTest::GTest GTest::Main  # GTest libs.
-  )
-  add_test(NAME AllTestsIn_${PROJECT_NAME} COMMAND ${PROJECT_NAME}_unittest)
 
-  # For running test, 1st build all:
-  #   cmake --build .
-  # Then run test with this command:
-  #   cmake -E env CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --target test
-  # Or with this command:
-  #   ctest --verbose
-  # Env var CTEST_OUTPUT_ON_FAILURE or key --verbose are for show test outputs,
-  # see
-  # https://stackoverflow.com/a/37123943
-  # https://stackoverflow.com/a/38386596
+#-----------------------------------------------------------------------
+# Testing
+#-----------------------------------------------------------------------
 
-  # For Visual Studio:
-  # https://stackoverflow.com/a/31124523
-  # https://stackoverflow.com/a/37123943
-  # cmake -E env CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --target RUN_TESTS
-
-endif()
+set(test_src_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
+add_subdirectory(test)
