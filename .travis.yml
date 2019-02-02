@@ -202,7 +202,8 @@ jobs:
 
 # Linux
     # debug, shared
-    - <<: *build_linux_gcc
+    - stage: test
+      <<: *build_linux_gcc
       env:
         - *build_linux_env
         - cmr_CMAKE_BUILD_TYPE=Debug
@@ -305,7 +306,7 @@ jobs:
 
 
 # Trigger the building of the dependent libs.
-    - stage: Trigger downstream
+    - stage: trigger downstream
         script:
           - gem install travis
           - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger.sh ./
