@@ -356,7 +356,8 @@ jobs:
 
       script:
         # NOTE: LibCMaker lib triggers.
-        - ./trigger.sh LibCMaker LibCMaker_STLCache master $TRAVIS_ACCESS_TOKEN
+        - ./trigger.sh LibCMaker LibCMaker_AGG              master $TRAVIS_ACCESS_TOKEN
+        - ./trigger.sh LibCMaker LibCMaker_STLCache         master $TRAVIS_ACCESS_TOKEN
 
 
 notifications:
