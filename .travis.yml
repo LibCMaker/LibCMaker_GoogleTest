@@ -306,11 +306,11 @@ matrix:
 
 
 # Trigger the building of the dependent libs.
-    - stage: Trigger downstream
-        script:
-          - gem install travis
-          - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger.sh ./
-          - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger-travis.sh ./
-
-          # NOTE: LibCMaker lib triggers.
-          - ./trigger.sh LibCMaker LibCMaker_STLCache master $TRAVIS_ACCESS_TOKEN
+#    - stage: Trigger downstream
+#        script:
+#          - gem install travis
+#          - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger.sh ./
+#          - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger-travis.sh ./
+#
+#          # NOTE: LibCMaker lib triggers.
+#          - ./trigger.sh LibCMaker LibCMaker_STLCache master $TRAVIS_ACCESS_TOKEN
