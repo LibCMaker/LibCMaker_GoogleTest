@@ -39,6 +39,7 @@ env:
 # === Linux ===
 
 build_linux: &build_linux
+  stage: Test
   os: linux
   dist: xenial
 
@@ -95,6 +96,7 @@ build_linux_clang: &build_linux_clang
 # === Android ===
 
 build_android: &build_android
+  stage: Test
   os: linux
   dist: xenial
   addons:
@@ -169,6 +171,7 @@ build_android: &build_android
 # === Windows ===
 
 build_windows: &build_windows
+  stage: Test
   os: windows
   env:
     - cmr_TARGET_OS=windows
@@ -178,6 +181,7 @@ build_windows: &build_windows
 # === macOS ===
 
 build_macos: &build_macos
+  stage: Test
   os: osx
   env:
     - cmr_TARGET_OS=macos
@@ -188,6 +192,7 @@ build_macos: &build_macos
 # === iOS ===
 
 build_ios: &build_ios
+  stage: Test
   os: osx
   env:
     - cmr_TARGET_OS=ios
@@ -198,32 +203,31 @@ build_ios: &build_ios
 # === Build matrix ===
 
 jobs:
-#matrix:
   include:
 
 # Linux
-    # debug, shared
+    # gcc, debug, shared
     - <<: *build_linux_gcc
       env:
         - *build_linux_env
         - cmr_CMAKE_BUILD_TYPE=Debug
         - cmr_BUILD_SHARED_LIBS=ON
 
-    # debug, static
+    # gcc, debug, static
     - <<: *build_linux_gcc
       env:
         - *build_linux_env
         - cmr_CMAKE_BUILD_TYPE=Debug
         - cmr_BUILD_SHARED_LIBS=OFF
 
-    # release, shared
+    # gcc, debug, shared
     - <<: *build_linux_gcc
       env:
         - *build_linux_env
         - cmr_CMAKE_BUILD_TYPE=Release
         - cmr_BUILD_SHARED_LIBS=ON
 
-    # release, static
+    # gcc, debug, shared
     - <<: *build_linux_gcc
       env:
         - *build_linux_env
@@ -306,11 +310,11 @@ jobs:
 
 
 # Trigger the building of the dependent libs.
-#    - stage: Trigger downstream
-#        script:
-#          - gem install travis
-#          - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger.sh ./
-#          - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger-travis.sh ./
-#
-#          # NOTE: LibCMaker lib triggers.
-#          - ./trigger.sh LibCMaker LibCMaker_STLCache master $TRAVIS_ACCESS_TOKEN
+    - stage: Trigger downstream
+      script:
+        - gem install travis
+        - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger.sh ./
+        - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger-travis.sh ./
+
+        # NOTE: LibCMaker lib triggers.
+        - ./trigger.sh LibCMaker LibCMaker_STLCache master $TRAVIS_ACCESS_TOKEN
