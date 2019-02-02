@@ -197,13 +197,13 @@ build_ios: &build_ios
 
 # === Build matrix ===
 
-jobs:
+#jobs:
+matrix:
   include:
 
 # Linux
     # debug, shared
-    - stage: test
-      <<: *build_linux_gcc
+    - <<: *build_linux_gcc
       env:
         - *build_linux_env
         - cmr_CMAKE_BUILD_TYPE=Debug
@@ -306,7 +306,7 @@ jobs:
 
 
 # Trigger the building of the dependent libs.
-    - stage: trigger downstream
+    - stage: Trigger downstream
         script:
           - gem install travis
           - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger.sh ./
