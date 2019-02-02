@@ -340,10 +340,15 @@ jobs:
 
 # Trigger the building of the dependent libs.
     - stage: Trigger downstream
-      script:
-        - gem install travis
-        - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger.sh ./
-        - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger-travis.sh ./
 
+      before_install:
+        - gem install travis
+        - mkdir ${cmr_SAMPLE_LIB_DIR}
+        - git clone https://github.com/LibCMaker/LibCMaker.git ${cmr_SAMPLE_LIB_DIR}/LibCMaker
+
+      before_script:
+        - cd ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis
+
+      script:
         # NOTE: LibCMaker lib triggers.
         - ./trigger.sh LibCMaker LibCMaker_STLCache master $TRAVIS_ACCESS_TOKEN
