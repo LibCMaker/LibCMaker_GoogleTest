@@ -352,3 +352,11 @@ jobs:
       script:
         # NOTE: LibCMaker lib triggers.
         - ./trigger.sh LibCMaker LibCMaker_STLCache master $TRAVIS_ACCESS_TOKEN
+
+
+notifications:
+  email:
+    recipients:
+      - nfeodonit@yandex.com
+    on_success: change
+    on_failure: always
