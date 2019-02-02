@@ -205,7 +205,7 @@ build_ios: &build_ios
 jobs:
   include:
 
-# Linux
+# Linux, gcc
     # gcc, debug, shared
     - <<: *build_linux_gcc
       env:
@@ -220,15 +220,44 @@ jobs:
         - cmr_CMAKE_BUILD_TYPE=Debug
         - cmr_BUILD_SHARED_LIBS=OFF
 
-    # gcc, debug, shared
+    # gcc, release, shared
     - <<: *build_linux_gcc
       env:
         - *build_linux_env
         - cmr_CMAKE_BUILD_TYPE=Release
         - cmr_BUILD_SHARED_LIBS=ON
 
-    # gcc, debug, shared
+    # gcc, release, static
     - <<: *build_linux_gcc
+      env:
+        - *build_linux_env
+        - cmr_CMAKE_BUILD_TYPE=Release
+        - cmr_BUILD_SHARED_LIBS=OFF
+
+# Linux, clang
+    # clang, debug, shared
+    - <<: *build_linux_clang
+      env:
+        - *build_linux_env
+        - cmr_CMAKE_BUILD_TYPE=Debug
+        - cmr_BUILD_SHARED_LIBS=ON
+
+    # clang, debug, static
+    - <<: *build_linux_clang
+      env:
+        - *build_linux_env
+        - cmr_CMAKE_BUILD_TYPE=Debug
+        - cmr_BUILD_SHARED_LIBS=OFF
+
+    # clang, release, shared
+    - <<: *build_linux_clang
+      env:
+        - *build_linux_env
+        - cmr_CMAKE_BUILD_TYPE=Release
+        - cmr_BUILD_SHARED_LIBS=ON
+
+    # clang, release, static
+    - <<: *build_linux_clang
       env:
         - *build_linux_env
         - cmr_CMAKE_BUILD_TYPE=Release
