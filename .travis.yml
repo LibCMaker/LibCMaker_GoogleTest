@@ -197,8 +197,8 @@ build_ios: &build_ios
 
 # === Build matrix ===
 
-#jobs:
-matrix:
+jobs:
+#matrix:
   include:
 
 # Linux
