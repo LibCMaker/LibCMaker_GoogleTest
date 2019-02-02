@@ -1,0 +1,314 @@
+# How to set up Travis CI with multiple languages:
+# https://stackoverflow.com/a/44054333
+
+# Android, iOS, Linux, macOS, Windows
+
+# debug, release
+# shared, static
+# x86, arm
+# 32bit, 64bit
+# min cmake: linux 3.4, windows 3.11, android 3.6
+# max cmake: latest (3.13.3)
+
+# Win7, WinXP
+# make, ninja
+# msvc, mingw-w64
+# gcc, clang, msvc
+
+
+# === Common ===
+
+sudo: false
+
+language: cpp
+
+env:
+  global:
+    # NOTE: LibCMaker lib name.
+    # NOTE: See below the lib deps in 'before_install' for every target OS.
+    # NOTE: See below 'after_success' with LibCMaker lib triggers to test on CI.
+    - cmr_LIB_NAME=GoogleTest
+    - cmr_SAMPLE_DIR=${TRAVIS_BUILD_DIR}/samples/TestCompileWith${cmr_LIB_NAME}
+    - cmr_SAMPLE_LIB_DIR=${cmr_SAMPLE_DIR}/libs
+    - cmr_BUILD_DIR=${cmr_SAMPLE_DIR}/build
+    - cmr_INSTALL_DIR=${cmr_BUILD_DIR}/install
+    - cmr_DOWNLOAD_DIR=${cmr_BUILD_DIR}/download
+    - cmr_JOBS_CNT=4
+
+
+# === Linux ===
+
+build_linux: &build_linux
+  os: linux
+  dist: xenial
+  env: &build_linux_env
+    - cmr_TARGET_OS=linux
+    - cmr_JOBS="-j${cmr_JOBS_CNT}"
+    - cmr_RUN_TEST=1
+
+    - cmr_CMAKE_RELEASE=cmake-3.4.0-Linux-x86_64
+    - cmr_CMAKE_DIR=${cmr_INSTALL_DIR}/${cmr_CMAKE_RELEASE}
+    - cmr_CMAKE_CMD=${cmr_CMAKE_DIR}/bin/cmake
+    - cmr_CTEST_CMD=${cmr_CMAKE_DIR}/bin/ctest
+
+  before_install:
+    - mkdir ${cmr_BUILD_DIR}
+    - mkdir ${cmr_INSTALL_DIR}
+    - mkdir ${cmr_DOWNLOAD_DIR}
+    - mkdir ${cmr_SAMPLE_LIB_DIR}
+    - ln -s ../../../../LibCMaker_${cmr_LIB_NAME} ${cmr_SAMPLE_LIB_DIR}
+
+    - wget -c -N -P ${cmr_DOWNLOAD_DIR} https://cmake.org/files/v3.4/${cmr_CMAKE_RELEASE}.tar.gz
+    - tar -xvf ${cmr_DOWNLOAD_DIR}/${cmr_CMAKE_RELEASE}.tar.gz --directory ${cmr_INSTALL_DIR}
+
+    # NOTE: LibCMaker lib deps.
+    - git clone https://github.com/LibCMaker/LibCMaker.git ${cmr_SAMPLE_LIB_DIR}/LibCMaker
+
+
+build_linux_gcc: &build_linux_gcc
+  <<: *build_linux
+  compiler: gcc
+
+
+build_linux_clang: &build_linux_clang
+  <<: *build_linux
+  compiler: clang
+
+
+# === Android ===
+
+build_android: &build_android
+  os: linux
+  dist: xenial
+  env: &build_android_env
+    - cmr_TARGET_OS=android
+    - cmr_JOBS="-j${cmr_JOBS_CNT}"
+
+    - cmr_CMAKE_RELEASE=cmake-3.6.0-Linux-x86_64
+    - cmr_CMAKE_DIR=${cmr_INSTALL_DIR}/${cmr_CMAKE_RELEASE}
+    - cmr_CMAKE_CMD=${cmr_CMAKE_DIR}/bin/cmake
+    - cmr_CTEST_CMD=${cmr_CMAKE_DIR}/bin/ctest
+
+    - cmr_CMAKE_GENERATOR="Ninja"
+    - cmr_CMAKE_BUILD_TYPE=Release
+
+    - cmr_ANDROID_NDK_VERSION=r19
+    - cmr_ANDROID_NDK_NAME=android-ndk-${cmr_ANDROID_NDK_VERSION}
+    - cmr_ANDROID_NDK_PLATFORM=${cmr_ANDROID_NDK_NAME}-linux-x86_64
+
+    - cmr_ANDROID_NDK=${cmr_INSTALL_DIR}/${cmr_ANDROID_NDK_NAME}
+    - cmr_CMAKE_TOOLCHAIN_FILE=${cmr_ANDROID_NDK}/build/cmake/android.toolchain.cmake
+
+    - cmr_ANDROID_CPP_FEATURES="rtti exceptions"
+    - cmr_ANDROID_TOOLCHAIN=clang
+
+  before_install:
+    - mkdir ${cmr_BUILD_DIR}
+    - mkdir ${cmr_INSTALL_DIR}
+    - mkdir ${cmr_DOWNLOAD_DIR}
+    - mkdir ${cmr_SAMPLE_LIB_DIR}
+    - ln -s ../../../../LibCMaker_${cmr_LIB_NAME} ${cmr_SAMPLE_LIB_DIR}
+
+    - wget -c -N -P ${cmr_DOWNLOAD_DIR} https://cmake.org/files/v3.6/${cmr_CMAKE_RELEASE}.tar.gz
+    - tar -xf ${cmr_DOWNLOAD_DIR}/${cmr_CMAKE_RELEASE}.tar.gz --directory ${cmr_INSTALL_DIR}
+
+    - wget -c -N -P ${cmr_DOWNLOAD_DIR} https://dl.google.com/android/repository/${cmr_ANDROID_NDK_PLATFORM}.zip
+    - unzip -q ${cmr_DOWNLOAD_DIR}/${cmr_ANDROID_NDK_PLATFORM}.zip -d ${cmr_INSTALL_DIR}
+
+    # NOTE: LibCMaker lib deps.
+    - git clone https://github.com/LibCMaker/LibCMaker.git ${cmr_SAMPLE_LIB_DIR}/LibCMaker
+
+  addons:
+    apt:
+      packages:
+        - ninja-build
+
+
+# === Windows ===
+
+build_windows: &build_windows
+  os: windows
+  env:
+    - cmr_TARGET_OS=windows
+    - cmr_CMAKE_CMD=/path/to/3.11/cmake  # TODO:
+    - RUN_TEST=1
+
+
+# === macOS ===
+
+build_macos: &build_macos
+  os: osx
+  env:
+    - cmr_TARGET_OS=macos
+    - cmr_CMAKE_CMD=/path/to/3.4/cmake  # TODO:
+    - cmr_RUN_TEST=1
+    - cmr_JOBS="-jobs ${cmr_JOBS_CNT}"  # TODO: only if CMAKE_GENERATOR == "Xcode"
+
+
+# === iOS ===
+
+build_ios: &build_ios
+  os: osx
+  env:
+    - cmr_TARGET_OS=ios
+    - cmr_CMAKE_CMD=/path/to/3.4/cmake  # TODO:
+    - cmr_JOBS="-jobs ${cmr_JOBS_CNT}"  # TODO: only if CMAKE_GENERATOR == "Xcode"
+
+
+# === Build matrix ===
+
+matrix:
+  include:
+
+# Linux
+    # debug, shared
+    - <<: *build_linux_gcc
+      env:
+        - *build_linux_env
+        - cmr_CMAKE_BUILD_TYPE=Debug
+        - cmr_BUILD_SHARED_LIBS=ON
+
+    # debug, static
+    - <<: *build_linux_gcc
+      env:
+        - *build_linux_env
+        - cmr_CMAKE_BUILD_TYPE=Debug
+        - cmr_BUILD_SHARED_LIBS=OFF
+
+    # release, shared
+    - <<: *build_linux_gcc
+      env:
+        - *build_linux_env
+        - cmr_CMAKE_BUILD_TYPE=Release
+        - cmr_BUILD_SHARED_LIBS=ON
+
+    # release, static
+    - <<: *build_linux_gcc
+      env:
+        - *build_linux_env
+        - cmr_CMAKE_BUILD_TYPE=Release
+        - cmr_BUILD_SHARED_LIBS=OFF
+
+# Android
+    # shared, arm, 32bit
+    - <<: *build_android
+      env:
+        - *build_android_env
+        - cmr_BUILD_SHARED_LIBS=ON
+        - cmr_ANDROID_STL=c++_shared
+        - cmr_ANDROID_ABI=armeabi-v7a
+        - cmr_ANDROID_NATIVE_API_LEVEL=16
+
+    # shared, arm, 64bit
+    - <<: *build_android
+      env:
+        - *build_android_env
+        - cmr_BUILD_SHARED_LIBS=ON
+        - cmr_ANDROID_STL=c++_shared
+        - cmr_ANDROID_ABI=arm64-v8a
+        - cmr_ANDROID_NATIVE_API_LEVEL=21
+
+    # shared, x86, 32bit
+    - <<: *build_android
+      env:
+        - *build_android_env
+        - cmr_BUILD_SHARED_LIBS=ON
+        - cmr_ANDROID_STL=c++_shared
+        - cmr_ANDROID_ABI=x86
+        - cmr_ANDROID_NATIVE_API_LEVEL=16
+
+    # shared, x86, 64bit
+    - <<: *build_android
+      env:
+        - *build_android_env
+        - cmr_BUILD_SHARED_LIBS=ON
+        - cmr_ANDROID_STL=c++_shared
+        - cmr_ANDROID_ABI=x86_64
+        - cmr_ANDROID_NATIVE_API_LEVEL=21
+
+
+    # static, arm, 32bit
+    - <<: *build_android
+      env:
+        - *build_android_env
+        - cmr_BUILD_SHARED_LIBS=OFF
+        - cmr_ANDROID_STL=c++_static
+        - cmr_ANDROID_ABI=armeabi-v7a
+        - cmr_ANDROID_NATIVE_API_LEVEL=16
+
+    # static, arm, 64bit
+    - <<: *build_android
+      env:
+        - *build_android_env
+        - cmr_BUILD_SHARED_LIBS=OFF
+        - cmr_ANDROID_STL=c++_static
+        - cmr_ANDROID_ABI=arm64-v8a
+        - cmr_ANDROID_NATIVE_API_LEVEL=21
+
+    # static, x86, 32bit
+    - <<: *build_android
+      env:
+        - *build_android_env
+        - cmr_BUILD_SHARED_LIBS=OFF
+        - cmr_ANDROID_STL=c++_static
+        - cmr_ANDROID_ABI=x86
+        - cmr_ANDROID_NATIVE_API_LEVEL=16
+
+    # static, x86, 64bit
+    - <<: *build_android
+      env:
+        - *build_android_env
+        - cmr_BUILD_SHARED_LIBS=OFF
+        - cmr_ANDROID_STL=c++_static
+        - cmr_ANDROID_ABI=x86_64
+        - cmr_ANDROID_NATIVE_API_LEVEL=21
+
+
+# === Build script ===
+
+before_script:
+  - cd ${cmr_BUILD_DIR}
+
+script:
+  - if [[ "$cmr_TARGET_OS" == "linux" ]]; then
+      ${cmr_CMAKE_CMD} ../
+        -Dcmr_PRINT_DEBUG=ON
+        -DCMAKE_VERBOSE_MAKEFILE=ON
+        -DCMAKE_COLOR_MAKEFILE=ON
+        -DBUILD_TESTING=ON
+        -DCMAKE_INSTALL_PREFIX=${cmr_INSTALL_DIR}
+          -DCMAKE_BUILD_TYPE=${cmr_CMAKE_BUILD_TYPE}
+          -DBUILD_SHARED_LIBS=${cmr_BUILD_SHARED_LIBS}
+    ; fi
+
+  - if [[ "$cmr_TARGET_OS" == "android" ]]; then
+      ${cmr_CMAKE_CMD} ../
+        -Dcmr_PRINT_DEBUG=ON
+        -DCMAKE_VERBOSE_MAKEFILE=ON
+        -DCMAKE_COLOR_MAKEFILE=ON
+        -DBUILD_TESTING=ON
+        -DCMAKE_INSTALL_PREFIX=${cmr_INSTALL_DIR}
+          -DCMAKE_BUILD_TYPE=${cmr_CMAKE_BUILD_TYPE}
+          -DBUILD_SHARED_LIBS=${cmr_BUILD_SHARED_LIBS}
+        -DANDROID_NDK=${cmr_ANDROID_NDK}
+          -DCMAKE_TOOLCHAIN_FILE=${cmr_CMAKE_TOOLCHAIN_FILE}
+          -DCMAKE_GENERATOR="${cmr_CMAKE_GENERATOR}"
+          -DANDROID_ABI=${cmr_ANDROID_ABI}
+          -DANDROID_NATIVE_API_LEVEL=${cmr_ANDROID_NATIVE_API_LEVEL}
+          -DANDROID_TOOLCHAIN=${cmr_ANDROID_TOOLCHAIN}
+          -DANDROID_STL=${cmr_ANDROID_STL}
+          -DANDROID_CPP_FEATURES="${cmr_ANDROID_CPP_FEATURES}"
+    ; fi
+
+  - ${cmr_CMAKE_CMD} --build . -- ${cmr_JOBS}
+
+  - if [[ -n "$cmr_RUN_TEST" ]]; then
+      ${cmr_CTEST_CMD} --output-on-failure
+    ; fi
+
+after_success:
+  - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger.sh ./
+  - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger-travis.sh ./
+
+  # NOTE: LibCMaker lib triggers to test on CI.
+  - ./trigger.sh LibCMaker LibCMaker_STLCache master $TRAVIS_ACCESS_TOKEN
