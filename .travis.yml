@@ -345,8 +345,8 @@ jobs:
 
 
 # Trigger the building of the dependent libs.
-    - stage: Trigger downstream
-      name: "Trigger downstream"
+    - stage: Trigger downstreams
+      name: "Trigger downstreams"
 
       before_install:
         - gem install travis
