@@ -364,7 +364,6 @@ jobs:
         - ./trigger.sh LibCMaker LibCMaker_Expat            master $TRAVIS_ACCESS_TOKEN
         - ./trigger.sh LibCMaker LibCMaker_FontConfig       master $TRAVIS_ACCESS_TOKEN
         - ./trigger.sh LibCMaker LibCMaker_FreeType         master $TRAVIS_ACCESS_TOKEN
-        - ./trigger.sh LibCMaker LibCMaker_GoogleTest       master $TRAVIS_ACCESS_TOKEN
         - ./trigger.sh LibCMaker LibCMaker_HarfBuzz         master $TRAVIS_ACCESS_TOKEN
         - ./trigger.sh LibCMaker LibCMaker_ICU              master $TRAVIS_ACCESS_TOKEN
         - ./trigger.sh LibCMaker LibCMaker_SQLite3          master $TRAVIS_ACCESS_TOKEN
