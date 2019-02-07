@@ -355,10 +355,11 @@ jobs:
         - mkdir ${cmr_SAMPLE_LIB_DIR}
         - git clone https://github.com/LibCMaker/LibCMaker.git ${cmr_SAMPLE_LIB_DIR}/LibCMaker
 
-      before_script:
-        - cd ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis
-
       script:
+        - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger.sh ${TRAVIS_BUILD_DIR}/
+        - cp ${cmr_SAMPLE_LIB_DIR}/LibCMaker/ci/travis/trigger-travis.sh ${TRAVIS_BUILD_DIR}/
+        - cd ${TRAVIS_BUILD_DIR}
+
         # NOTE: LibCMaker lib triggers.
         - ./trigger.sh LibCMaker LibCMaker_AGG              master $TRAVIS_ACCESS_TOKEN
 # Only for MSVC #        - ./trigger.sh LibCMaker LibCMaker_Dirent           master $TRAVIS_ACCESS_TOKEN
@@ -370,7 +371,6 @@ jobs:
 
 #        - ./trigger.sh LibCMaker LibCMaker_FontConfig       master $TRAVIS_ACCESS_TOKEN
 #        - ./trigger.sh LibCMaker LibCMaker_FreeType         master $TRAVIS_ACCESS_TOKEN
-#        - ./trigger.sh LibCMaker LibCMaker_SQLiteModernCPP  master $TRAVIS_ACCESS_TOKEN
 
 
 notifications:
