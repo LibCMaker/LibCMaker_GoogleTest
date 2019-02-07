@@ -69,17 +69,18 @@ build_linux: &build_linux
     # NOTE: LibCMaker lib deps.
     - git clone https://github.com/LibCMaker/LibCMaker.git ${cmr_SAMPLE_LIB_DIR}/LibCMaker
 
-  before_script:
+  script:
     - cd ${cmr_BUILD_DIR}
 
-  script:
-    - ${cmr_CMAKE_CMD} ../
+    - ${cmr_CMAKE_CMD} ${cmr_SAMPLE_DIR}
         -Dcmr_BUILD_MULTIPROC_CNT=${cmr_JOBS_CNT}
         -Dcmr_PRINT_DEBUG=ON
         -DCMAKE_VERBOSE_MAKEFILE=ON
         -DCMAKE_COLOR_MAKEFILE=ON
         -DBUILD_TESTING=${cmr_BUILD_TESTING}
         -DCMAKE_INSTALL_PREFIX=${cmr_INSTALL_DIR}
+        -Dcmr_DOWNLOAD_DIR=${cmr_DOWNLOAD_DIR}
+        -Dcmr_UNPACKED_DIR=${cmr_DOWNLOAD_DIR}/unpacked
           -DCMAKE_BUILD_TYPE=${cmr_CMAKE_BUILD_TYPE}
           -DBUILD_SHARED_LIBS=${cmr_BUILD_SHARED_LIBS}
 
@@ -124,8 +125,8 @@ build_android: &build_android
     - cmr_ANDROID_NDK_VERSION=r19
     - cmr_ANDROID_NDK_NAME=android-ndk-${cmr_ANDROID_NDK_VERSION}
     - cmr_ANDROID_NDK_PLATFORM=${cmr_ANDROID_NDK_NAME}-linux-x86_64
-
     - cmr_ANDROID_NDK=${cmr_INSTALL_DIR}/${cmr_ANDROID_NDK_NAME}
+
     - cmr_CMAKE_TOOLCHAIN_FILE=${cmr_ANDROID_NDK}/build/cmake/android.toolchain.cmake
 
     - cmr_ANDROID_CPP_FEATURES="rtti exceptions"
@@ -147,17 +148,18 @@ build_android: &build_android
     # NOTE: LibCMaker lib deps.
     - git clone https://github.com/LibCMaker/LibCMaker.git ${cmr_SAMPLE_LIB_DIR}/LibCMaker
 
-  before_script:
+  script:
     - cd ${cmr_BUILD_DIR}
 
-  script:
-    - ${cmr_CMAKE_CMD} ../
+    - ${cmr_CMAKE_CMD} ${cmr_SAMPLE_DIR}
         -Dcmr_BUILD_MULTIPROC_CNT=${cmr_JOBS_CNT}
         -Dcmr_PRINT_DEBUG=ON
         -DCMAKE_VERBOSE_MAKEFILE=ON
         -DCMAKE_COLOR_MAKEFILE=ON
         -DBUILD_TESTING=${cmr_BUILD_TESTING}
         -DCMAKE_INSTALL_PREFIX=${cmr_INSTALL_DIR}
+        -Dcmr_DOWNLOAD_DIR=${cmr_DOWNLOAD_DIR}
+        -Dcmr_UNPACKED_DIR=${cmr_DOWNLOAD_DIR}/unpacked
           -DCMAKE_BUILD_TYPE=${cmr_CMAKE_BUILD_TYPE}
           -DBUILD_SHARED_LIBS=${cmr_BUILD_SHARED_LIBS}
         -DANDROID_NDK=${cmr_ANDROID_NDK}
@@ -359,22 +361,21 @@ jobs:
       script:
         # NOTE: LibCMaker lib triggers.
         - ./trigger.sh LibCMaker LibCMaker_AGG              master $TRAVIS_ACCESS_TOKEN
-        - ./trigger.sh LibCMaker LibCMaker_Boost            master $TRAVIS_ACCESS_TOKEN
-        - ./trigger.sh LibCMaker LibCMaker_Dirent           master $TRAVIS_ACCESS_TOKEN
+# Only for MSVC #        - ./trigger.sh LibCMaker LibCMaker_Dirent           master $TRAVIS_ACCESS_TOKEN
         - ./trigger.sh LibCMaker LibCMaker_Expat            master $TRAVIS_ACCESS_TOKEN
-        - ./trigger.sh LibCMaker LibCMaker_FontConfig       master $TRAVIS_ACCESS_TOKEN
-        - ./trigger.sh LibCMaker LibCMaker_FreeType         master $TRAVIS_ACCESS_TOKEN
         - ./trigger.sh LibCMaker LibCMaker_HarfBuzz         master $TRAVIS_ACCESS_TOKEN
         - ./trigger.sh LibCMaker LibCMaker_ICU              master $TRAVIS_ACCESS_TOKEN
-        - ./trigger.sh LibCMaker LibCMaker_SQLite3          master $TRAVIS_ACCESS_TOKEN
-        - ./trigger.sh LibCMaker LibCMaker_SQLiteModernCPP  master $TRAVIS_ACCESS_TOKEN
         - ./trigger.sh LibCMaker LibCMaker_STLCache         master $TRAVIS_ACCESS_TOKEN
         - ./trigger.sh LibCMaker LibCMaker_wxWidgets        master $TRAVIS_ACCESS_TOKEN
+
+#        - ./trigger.sh LibCMaker LibCMaker_FontConfig       master $TRAVIS_ACCESS_TOKEN
+#        - ./trigger.sh LibCMaker LibCMaker_FreeType         master $TRAVIS_ACCESS_TOKEN
+#        - ./trigger.sh LibCMaker LibCMaker_SQLiteModernCPP  master $TRAVIS_ACCESS_TOKEN
 
 
 notifications:
   email:
     recipients:
       - nfeodonit@yandex.com
-    on_success: change
+    on_success: always
     on_failure: always
