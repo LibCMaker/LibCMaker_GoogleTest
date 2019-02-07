@@ -369,9 +369,6 @@ jobs:
         - ./trigger.sh LibCMaker LibCMaker_STLCache         master $TRAVIS_ACCESS_TOKEN
         - ./trigger.sh LibCMaker LibCMaker_wxWidgets        master $TRAVIS_ACCESS_TOKEN
 
-#        - ./trigger.sh LibCMaker LibCMaker_FontConfig       master $TRAVIS_ACCESS_TOKEN
-#        - ./trigger.sh LibCMaker LibCMaker_FreeType         master $TRAVIS_ACCESS_TOKEN
-
 
 notifications:
   email:
