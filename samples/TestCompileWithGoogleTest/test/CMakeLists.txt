@@ -29,16 +29,20 @@ if(BUILD_TESTING)
   add_executable(${test_NAME} "")
   target_sources(${test_NAME}
     PRIVATE
-      ${lib_EXAMPLES_SRC_DIR}/sample1_unittest.cc
+      ${test_src_DIR}/sample1_unittest.cc
   )
   set_target_properties(${test_NAME} PROPERTIES
     CXX_STANDARD 11
     C_STANDARD 11
   )
 
+  # Our lib for testing.
   target_link_libraries(${test_NAME} PRIVATE
-    ${PROJECT_NAME}           # Our lib for testing.
-    GTest::GTest GTest::Main  # GTest libs.
+    ${PROJECT_NAME}
+  )
+
+  target_link_libraries(${test_NAME} PRIVATE
+    GTest::GTest GTest::Main
   )
 
   add_test(NAME ${test_NAME} COMMAND ${test_NAME})

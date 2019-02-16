@@ -119,7 +119,7 @@ build_windows: &build_windows
 
     - cmr_CMAKE_BUILD_TYPE=Release
 
-    - PATH=${cmr_INSTALL_DIR}/bin:${PATH}
+    - PATH=${cmr_BUILD_DIR}/${cmr_CMAKE_BUILD_TYPE}:${cmr_INSTALL_DIR}/bin:${PATH}
 
   before_install:
     - cp -r ${cmr_SAMPLE_SRC_DIR} ${cmr_WORK_DIR}

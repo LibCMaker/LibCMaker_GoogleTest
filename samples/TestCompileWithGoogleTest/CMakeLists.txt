@@ -77,17 +77,19 @@ endif()
 # Build the test library
 #-----------------------------------------------------------------------
 
-# Get an example sources from the lib sources.
-set(src_commit "a325ad2db5deb623eab740527e559b81c0f39d65")
-set(lib_EXAMPLES_SRC_DIR
-  "${cmr_UNPACKED_DIR}/googletest-${GTEST_lib_VERSION}/googletest-${src_commit}/googletest/samples"
-)
+set(example_src_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
 
 add_library(${PROJECT_NAME}
-  ${lib_EXAMPLES_SRC_DIR}/sample1.h
-  ${lib_EXAMPLES_SRC_DIR}/sample1.cc
+  ${example_src_DIR}/sample1.h
+  ${example_src_DIR}/sample1.cc
 )
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  CXX_STANDARD 11
+  C_STANDARD 11
+)
+if(BUILD_SHARED_LIBS AND WIN32 AND NOT MINGW)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE "SAMPLE_EXTERN=__declspec(dllexport) extern")
+endif()
 
 
 #-----------------------------------------------------------------------

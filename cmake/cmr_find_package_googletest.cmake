@@ -37,6 +37,8 @@
     gtest_disable_pthreads
     gtest_hide_internal_symbols
     gmock_build_tests
+    GTEST_LINKED_AS_SHARED_LIBRARY
+    GTEST_CREATE_SHARED_LIBRARY
   )
 
   foreach(d ${find_LIB_VARS})
