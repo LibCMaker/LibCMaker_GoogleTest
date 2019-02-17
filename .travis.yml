@@ -500,7 +500,7 @@ jobs:
       name: "Trigger downstreams"
       # TODO: See "VM fails to come up if you have secrets" in
       # https://travis-ci.community/t/current-known-issues-please-read-this-before-posting-a-new-topic/264
-      if: false  # TODO: remove it after fix and add secure var TRAVIS_ACCESS_TOKEN in Settings -- "Environment Variables".
+      if: branch = skipped  # TODO: remove it after fix and add secure var TRAVIS_ACCESS_TOKEN in Settings -- "Environment Variables".
 
       before_install:
         - gem install travis
