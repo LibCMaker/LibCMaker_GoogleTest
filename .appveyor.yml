@@ -1,4 +1,4 @@
-# === Windows builds ===
+# === Windows builds === 
 
 image:
   - Visual Studio 2017
