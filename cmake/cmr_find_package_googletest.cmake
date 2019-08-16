@@ -29,6 +29,7 @@
 
 ## +++ Common part of the lib_cmaker_<lib_name> function +++
   set(find_LIB_VARS
+    COPY_GTEST_CMAKE_BUILD_SCRIPTS
     BUILD_GTEST
     BUILD_GMOCK
     gtest_force_shared_crt

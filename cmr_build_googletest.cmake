@@ -48,6 +48,9 @@ list(APPEND CMAKE_MODULE_PATH "${GTEST_lib_DIR}/cmake/modules")
 # LibCMaker_<LibName> specific vars and options
 #-----------------------------------------------------------------------
 
+set(COPY_GTEST_CMAKE_BUILD_SCRIPTS ON)
+
+
 #-----------------------------------------------------------------------
 # Common Google Test and Google Mock options
 #

@@ -23,5 +23,15 @@
 
 # Part of "LibCMaker/cmake/cmr_build_rules.cmake".
 
+  # Copy CMake build scripts.
+  if(COPY_GTEST_CMAKE_BUILD_SCRIPTS)
+    cmr_print_status("Copy CMake build scripts to unpacked sources.")
+    execute_process(
+      COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${lib_BASE_DIR}/patch/googletest-${lib_VERSION}
+        ${lib_SRC_DIR}/
+    )
+  endif()
+
   # Configure library.
   add_subdirectory(${lib_SRC_DIR} ${lib_VERSION_BUILD_DIR})
