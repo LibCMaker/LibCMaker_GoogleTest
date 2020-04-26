@@ -37,7 +37,8 @@
 #-----------------------------------------------------------------------
 
 set(GTEST_lib_NAME      "GoogleTest")
-set(GTEST_lib_VERSION   "1.10.20200425")
+# TODO: Fix build 1.10 for Apple OSs.
+set(GTEST_lib_VERSION   "1.8.20180314")
 set(GTEST_lib_DIR       "${CMAKE_CURRENT_LIST_DIR}")
 
 # To use our Find<LibName>.cmake.
