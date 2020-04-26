@@ -43,6 +43,11 @@ set(GTEST_lib_DIR       "${CMAKE_CURRENT_LIST_DIR}")
 # To use our Find<LibName>.cmake.
 list(APPEND CMAKE_MODULE_PATH "${GTEST_lib_DIR}/cmake/modules")
 
+if(BUILD_FOR_WINXP OR CMAKE_GENERATOR_TOOLSET STREQUAL "v141_xp")
+  # TODO: Update to max version for Windows XP.
+  set(GTEST_lib_VERSION "1.8.20180314")
+endif()
+
 
 #-----------------------------------------------------------------------
 # LibCMaker_<LibName> specific vars and options
