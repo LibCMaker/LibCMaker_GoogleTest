@@ -36,25 +36,27 @@
 # Lib's name, version, paths
 #-----------------------------------------------------------------------
 
-set(GTEST_lib_NAME      "GoogleTest")
-# TODO: Fix build 1.10 for Apple OSs.
-set(GTEST_lib_VERSION   "1.8.20180314")
-set(GTEST_lib_DIR       "${CMAKE_CURRENT_LIST_DIR}")
-
-# To use our Find<LibName>.cmake.
-list(APPEND CMAKE_MODULE_PATH "${GTEST_lib_DIR}/cmake/modules")
+set(GTEST_lib_NAME "GoogleTest")
+set(GTEST_lib_DIR "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "GTEST_lib_DIR")
 
 if(BUILD_FOR_WINXP OR CMAKE_GENERATOR_TOOLSET STREQUAL "v141_xp")
   # TODO: Update to max version for Windows XP.
-  set(GTEST_lib_VERSION "1.8.20180314")
+  set(_GTEST_lib_VERSION "1.8.20180314")
+else()
+  # TODO: Fix build 1.10 for Apple OSs.
+  set(_GTEST_lib_VERSION "1.8.20180314")
 endif()
+set(GTEST_lib_VERSION ${_GTEST_lib_VERSION} CACHE STRING "GTEST_lib_VERSION")
+
+# To use our Find<LibName>.cmake.
+list(APPEND CMAKE_MODULE_PATH "${GTEST_lib_DIR}/cmake/modules")
 
 
 #-----------------------------------------------------------------------
 # LibCMaker_<LibName> specific vars and options
 #-----------------------------------------------------------------------
 
-set(COPY_GTEST_CMAKE_BUILD_SCRIPTS ON)
+option(COPY_GTEST_CMAKE_BUILD_SCRIPTS "COPY_GTEST_CMAKE_BUILD_SCRIPTS" ON)
 
 
 #-----------------------------------------------------------------------
