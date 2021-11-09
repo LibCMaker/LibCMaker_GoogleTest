@@ -47,6 +47,12 @@
     set(src_commit
       "955c7f837efad184ec63e771c42542d37545eaef")
   endif()
+  if(version VERSION_EQUAL "1.11.20211031")
+    set(arch_file_sha
+      "879a4064738cb3c76a11d449145b442654d7282f3cd0f5f03ec8c3dc862646c6")
+    set(src_commit
+      "16f637fbf4ffc3f7a01fa4eceb7906634565242f")
+  endif()
 
   set(base_url "https://github.com/google/googletest/archive")
   set(src_dir_name    "googletest-${version}")
