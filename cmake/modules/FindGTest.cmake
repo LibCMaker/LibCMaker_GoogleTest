@@ -205,16 +205,24 @@ else()
     __gtest_find_library(GTEST_LIBRARY_DEBUG      gtestd)
     __gtest_find_library(GTEST_MAIN_LIBRARY       gtest_main)
     __gtest_find_library(GTEST_MAIN_LIBRARY_DEBUG gtest_maind)
-    
+
+
     # TODO: Remove it if made in lib_cmaker_googletest.cmake
-    # TODO: for multi-configuration generators.
-    if(NOT CMAKE_CFG_INTDIR STREQUAL ".")
-        if(GTEST_LIBRARY_DEBUG AND NOT GTEST_LIBRARY)
-            __gtest_find_library(GTEST_LIBRARY            gtestd)
-        endif()
-        if(GTEST_MAIN_LIBRARY_DEBUG AND NOT GTEST_MAIN_LIBRARY)
-            __gtest_find_library(GTEST_MAIN_LIBRARY       gtest_maind)
-        endif()
+    if(GTEST_LIBRARY_DEBUG AND NOT GTEST_LIBRARY)
+        set(
+          GTEST_LIBRARY
+          "${GTEST_LIBRARY_DEBUG}"
+          CACHE FILEPATH "Path to a library."
+          FORCE
+        )
+    endif()
+    if(GTEST_MAIN_LIBRARY_DEBUG AND NOT GTEST_MAIN_LIBRARY)
+        set(
+          GTEST_MAIN_LIBRARY
+          "${GTEST_MAIN_LIBRARY_DEBUG}"
+          CACHE FILEPATH "Path to a library."
+          FORCE
+        )
     endif()
 endif()
 

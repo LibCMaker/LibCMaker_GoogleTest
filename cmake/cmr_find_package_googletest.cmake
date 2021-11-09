@@ -72,25 +72,3 @@
     INSTALL
   )
 ## --- Common part of the lib_cmaker_<lib_name> function ---
-
-  # Release lib must be builded for debug type.
-  # TODO: for multi-configuration generators, see:
-  # https://stackoverflow.com/a/24470998
-  if(CMAKE_CFG_INTDIR STREQUAL "." AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-    cmr_print_status("Build the Release library type.")
-    set(CMAKE_BUILD_TYPE "Release")
-## +++ Common part of the lib_cmaker_<lib_name> function +++
-    cmr_lib_cmaker_main(
-      LibCMaker_DIR ${find_LibCMaker_DIR}
-      NAME          ${find_NAME}
-      VERSION       ${find_VERSION}
-      LANGUAGES     ${GTEST_lib_LANGUAGES}
-      BASE_DIR      ${find_LIB_DIR}
-      DOWNLOAD_DIR  ${cmr_DOWNLOAD_DIR}
-      UNPACKED_DIR  ${cmr_UNPACKED_DIR}
-      BUILD_DIR     ${lib_BUILD_DIR}
-      CMAKE_ARGS    ${find_CMAKE_ARGS}
-      INSTALL
-    )
-## --- Common part of the lib_cmaker_<lib_name> function ---
-  endif()
