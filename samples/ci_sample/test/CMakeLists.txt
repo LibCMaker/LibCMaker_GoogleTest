@@ -41,3 +41,28 @@ if(BUILD_TESTING)
 
   cmr_common_sample_test_2nd_part()
 endif()
+
+
+#-----------------------------------------------------------------------
+# FailTest
+#-----------------------------------------------------------------------
+
+if(BUILD_TESTING)
+  set(test_NAME "FailTest")
+  add_executable(${test_NAME} ${IOS_MACOSX_BUNDLE} "")
+
+  target_sources(${test_NAME}
+    PRIVATE
+      ${test_src_DIR}/fail-test.cpp
+  )
+  set_target_properties(${test_NAME} PROPERTIES
+    CXX_STANDARD 11
+    C_STANDARD 11
+  )
+
+  cmr_common_sample_test_2nd_part_2()
+
+  set_tests_properties(${test_NAME} PROPERTIES
+    PASS_REGULAR_EXPRESSION "\\[  FAILED  \\] FailTest.FailTest"
+  )
+endif()
