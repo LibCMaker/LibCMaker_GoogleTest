@@ -38,15 +38,7 @@
 
 set(GTEST_lib_NAME "GoogleTest")
 set(GTEST_lib_DIR "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "GTEST_lib_DIR")
-
-if(BUILD_FOR_WINXP OR CMAKE_GENERATOR_TOOLSET STREQUAL "v141_xp")
-  # TODO: Update to max version for Windows XP.
-  set(_GTEST_lib_VERSION "1.8.20180314")
-else()
-  # TODO: Fix build 1.10 for Apple OSs.
-  set(_GTEST_lib_VERSION "1.11.20211031")
-endif()
-set(GTEST_lib_VERSION ${_GTEST_lib_VERSION} CACHE STRING "GTEST_lib_VERSION")
+set(GTEST_lib_VERSION "1.11.20211031" CACHE STRING "GTEST_lib_VERSION")
 
 # To use our Find<LibName>.cmake.
 list(APPEND CMAKE_MODULE_PATH "${GTEST_lib_DIR}/cmake/modules")
