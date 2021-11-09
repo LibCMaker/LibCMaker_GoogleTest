@@ -56,7 +56,7 @@ list(APPEND CMAKE_MODULE_PATH "${GTEST_lib_DIR}/cmake/modules")
 # LibCMaker_<LibName> specific vars and options
 #-----------------------------------------------------------------------
 
-option(COPY_GTEST_CMAKE_BUILD_SCRIPTS "COPY_GTEST_CMAKE_BUILD_SCRIPTS" ON)
+option(COPY_GTEST_CMAKE_BUILD_SCRIPTS "COPY_GTEST_CMAKE_BUILD_SCRIPTS" OFF)
 
 
 #-----------------------------------------------------------------------
