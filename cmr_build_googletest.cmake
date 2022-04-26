@@ -38,7 +38,7 @@
 
 set(GTEST_lib_NAME "GoogleTest")
 set(GTEST_lib_DIR "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "GTEST_lib_DIR")
-set(GTEST_lib_VERSION "1.11.20211031" CACHE STRING "GTEST_lib_VERSION")
+set(GTEST_lib_VERSION "1.11.20220426" CACHE STRING "GTEST_lib_VERSION")
 
 # To use our Find<LibName>.cmake.
 list(APPEND CMAKE_MODULE_PATH "${GTEST_lib_DIR}/cmake/modules")
