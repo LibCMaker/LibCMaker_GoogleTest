@@ -24,20 +24,23 @@
 set(LibCMaker_LIB_DIR "${CMAKE_CURRENT_LIST_DIR}/libs")
 set(LibCMaker_DIR "${LibCMaker_LIB_DIR}/LibCMaker")
 
-include(${LibCMaker_DIR}/samples/cmr_get_cmake_min_ver.cmake NO_POLICY_SCOPE)
+include("${LibCMaker_DIR}/cmake/cmr_get_cmake_min_ver.cmake" NO_POLICY_SCOPE)
 cmr_get_cmake_min_ver()
 cmake_minimum_required(VERSION ${cmr_CMAKE_MIN_VER})
 
-project(LibCMaker_GoogleTest_Compile_Test CXX)
+include("${LibCMaker_DIR}/samples/cmr_samples_common_macros.cmake")
+cmr_common_sample_0_part()
 
-include(${LibCMaker_DIR}/samples/cmr_samples_common_macros.cmake)
+project(LibCMaker_GoogleTest_Compile_Test CXX)
 
 
 #-----------------------------------------------------------------------
 # Common sample 1st part
 #-----------------------------------------------------------------------
 
-cmr_common_sample_1st_part()
+cmr_common_sample_1_part()
+
+cmr_common_sample_2_part()
 
 
 #-----------------------------------------------------------------------
@@ -71,7 +74,7 @@ endif()
 #-----------------------------------------------------------------------
 
 # Used onle for executables.
-#cmr_common_sample_2nd_part()
+#cmr_common_sample_3_part()
 
 
 #-----------------------------------------------------------------------

@@ -23,7 +23,7 @@
 
 # Testing with Google Test.
 if(BUILD_TESTING)
-  cmr_common_sample_test_1st_part()
+  cmr_common_sample_test_1_part()
 
   target_sources(${test_NAME}
     PRIVATE
@@ -39,7 +39,7 @@ if(BUILD_TESTING)
     ${PROJECT_NAME}
   )
 
-  cmr_common_sample_test_2nd_part()
+  cmr_common_sample_test_2_part()
 endif()
 
 
@@ -60,7 +60,28 @@ if(BUILD_TESTING)
     C_STANDARD 11
   )
 
-  cmr_common_sample_test_2nd_part_2()
+  if(WIN32 AND MSVC AND (TARGETING_XP_64 OR TARGETING_XP))
+    if(TARGETING_XP_64)
+      set(_EXE_SUBSYSTEM_VER "5.02")
+    elseif(TARGETING_XP)
+      set(_EXE_SUBSYSTEM_VER "5.01")
+    endif()
+
+    # See docs for add_executable() and WIN32_EXECUTABLE.
+    #set_property(TARGET ${test_NAME} PROPERTY WIN32_EXECUTABLE ON)
+    get_target_property(_WIN32_EXECUTABLE ${test_NAME} WIN32_EXECUTABLE)
+    if(_WIN32_EXECUTABLE)
+      set(_EXE_SUBSYSTEM "WINDOWS")
+    else()
+      set(_EXE_SUBSYSTEM "CONSOLE")
+    endif()
+
+    target_link_options(${test_NAME} PRIVATE
+      "/SUBSYSTEM:${_EXE_SUBSYSTEM},${_EXE_SUBSYSTEM_VER}"
+    )
+  endif()
+
+  cmr_common_sample_test_2_part_2()
 
   set_tests_properties(${test_NAME} PROPERTIES
     PASS_REGULAR_EXPRESSION "\\[  FAILED  \\] FailTest.FailTest"
