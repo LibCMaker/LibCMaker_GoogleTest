@@ -146,22 +146,22 @@ jobs:
             cmake_generator: "Visual Studio"
             runner: "windows-2019"
 
-# Windows, MSVC, WinXP
-          - target: "Windows_MSVC"
-            platform: "WinXP"
-            compiler: "MSVC"
-            build_type: "Debug"
-            lib_linking: "shared"
-            cmake_generator: "Visual Studio"
-            runner: "windows-2019"
+## Windows, MSVC, WinXP
+#          - target: "Windows_MSVC"
+#            platform: "WinXP"
+#            compiler: "MSVC"
+#            build_type: "Debug"
+#            lib_linking: "shared"
+#            cmake_generator: "Visual Studio"
+#            runner: "windows-2019"
 
-          - target: "Windows_MSVC"
-            platform: "WinXP"
-            compiler: "MSVC"
-            build_type: "Release"
-            lib_linking: "static"
-            cmake_generator: "Visual Studio"
-            runner: "windows-2019"
+#          - target: "Windows_MSVC"
+#            platform: "WinXP"
+#            compiler: "MSVC"
+#            build_type: "Release"
+#            lib_linking: "static"
+#            cmake_generator: "Visual Studio"
+#            runner: "windows-2019"
 
 
 # Windows, GCC, MinGW-w64, x86_64
