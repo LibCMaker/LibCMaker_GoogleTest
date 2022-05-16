@@ -47,7 +47,7 @@ endif()
 # FailTest
 #-----------------------------------------------------------------------
 
-if(BUILD_TESTING)
+if(BUILD_TESTING AND NOT ANDROID AND NOT IOS)
   set(test_NAME "FailTest")
   add_executable(${test_NAME} ${IOS_MACOSX_BUNDLE} "")
 
