@@ -414,12 +414,12 @@ jobs:
 
     steps:
       - name: Checkout Library repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: LibCMaker_Lib
 
       - name: Checkout LibCMaker repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: LibCMaker/LibCMaker
           path: LibCMaker
