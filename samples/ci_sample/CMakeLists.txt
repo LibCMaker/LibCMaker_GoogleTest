@@ -29,23 +29,26 @@ cmr_get_cmake_min_ver()
 cmake_minimum_required(VERSION ${cmr_CMAKE_MIN_VER})
 
 include("${LibCMaker_DIR}/samples/cmr_samples_common_macros.cmake")
-cmr_common_sample_0_part()
+cmr_common_sample_part__before_project()
 
 project(LibCMaker_GoogleTest_Compile_Test CXX)
 
+cmr_common_sample_part__project_settings()
+
 
 #-----------------------------------------------------------------------
-# Common sample 1st part
+# Common sample part
 #-----------------------------------------------------------------------
 
-cmr_common_sample_1_part()
-
-cmr_common_sample_2_part()
+# Used only for executables.
+#cmr_common_sample_part__add_executable()
 
 
 #-----------------------------------------------------------------------
 # Download, configure, build, install and find the required libraries
 #-----------------------------------------------------------------------
+
+# Google Test lib is working in `cmr_common_sample_part__project_settings()`.
 
 
 #-----------------------------------------------------------------------
@@ -67,14 +70,6 @@ if(BUILD_SHARED_LIBS AND WIN32 AND NOT MINGW)
     PRIVATE
       "SAMPLE_EXTERN=__declspec(dllexport) extern")
 endif()
-
-
-#-----------------------------------------------------------------------
-# Common sample 2nd part
-#-----------------------------------------------------------------------
-
-# Used onle for executables.
-#cmr_common_sample_3_part()
 
 
 #-----------------------------------------------------------------------

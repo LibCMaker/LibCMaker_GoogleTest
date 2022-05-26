@@ -23,7 +23,17 @@
 
 # Testing with Google Test.
 if(BUILD_TESTING)
-  cmr_common_sample_test_1_part()
+  cmr_common_test_part__set_test_name()
+  cmr_common_test_part__add_executable()
+  cmr_common_test_part__android__init()
+  cmr_common_test_part__android__push_shared_libs()
+
+  cmr_common_test_part__android__push_test_lib()
+
+  cmr_common_test_part__android__push_test_exe()
+  cmr_common_test_part__android__run_test()
+  cmr_common_test_part__ios()
+  cmr_common_test_part__set_common_tests_properties()
 
   target_sources(${test_NAME}
     PRIVATE
@@ -38,8 +48,6 @@ if(BUILD_TESTING)
   target_link_libraries(${test_NAME} PRIVATE
     ${PROJECT_NAME}
   )
-
-  cmr_common_sample_test_2_part()
 endif()
 
 
@@ -49,7 +57,8 @@ endif()
 
 if(BUILD_TESTING AND NOT ANDROID AND NOT IOS)
   set(test_NAME "FailTest")
-  add_executable(${test_NAME} ${IOS_MACOSX_BUNDLE} "")
+
+  cmr_common_test_part__add_executable()
 
   target_sources(${test_NAME}
     PRIVATE
@@ -59,29 +68,6 @@ if(BUILD_TESTING AND NOT ANDROID AND NOT IOS)
     CXX_STANDARD 11
     C_STANDARD 11
   )
-
-  if(WIN32 AND MSVC AND (TARGETING_XP_64 OR TARGETING_XP))
-    if(TARGETING_XP_64)
-      set(_EXE_SUBSYSTEM_VER "5.02")
-    elseif(TARGETING_XP)
-      set(_EXE_SUBSYSTEM_VER "5.01")
-    endif()
-
-    # See docs for add_executable() and WIN32_EXECUTABLE.
-    #set_property(TARGET ${test_NAME} PROPERTY WIN32_EXECUTABLE ON)
-    get_target_property(_WIN32_EXECUTABLE ${test_NAME} WIN32_EXECUTABLE)
-    if(_WIN32_EXECUTABLE)
-      set(_EXE_SUBSYSTEM "WINDOWS")
-    else()
-      set(_EXE_SUBSYSTEM "CONSOLE")
-    endif()
-
-    target_link_options(${test_NAME} PRIVATE
-      "/SUBSYSTEM:${_EXE_SUBSYSTEM},${_EXE_SUBSYSTEM_VER}"
-    )
-  endif()
-
-  cmr_common_sample_test_2_part_2()
 
   set_tests_properties(${test_NAME} PROPERTIES
     PASS_REGULAR_EXPRESSION "\\[  FAILED  \\] FailTest.FailTest"
